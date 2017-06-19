@@ -1,3 +1,4 @@
+// go run dup3.go < dup3.go
 package main
 
 import (
