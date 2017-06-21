@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 )
@@ -10,8 +11,13 @@ func main() {
 	fmt.Println(basename2("a/b/c"))
 	fmt.Println(basename2("a/b.c.go"))
 
-	fmt.Println(comma("1234567"))
-	fmt.Println(commaf("1234567.89"))
+	fmt.Println(commafor("123"))
+	fmt.Println(commafor("1234"))
+	fmt.Println(commafor("12345"))
+	fmt.Println(commafor("123456"))
+	fmt.Println(commafor("1234567"))
+	fmt.Println(comma("1234567.89"))
+	fmt.Println(intsToString([]int{1, 2, 3, 4, 5}))
 }
 
 // basename removes directory components and a .suffix
@@ -49,13 +55,40 @@ func comma(s string) string {
 	if n <= 3 {
 		return s
 	}
-	return comma(s[:n-3]) + "," + s[n-3:]
-}
 
-func commaf(s string) string {
 	if dot := strings.LastIndex(s, "."); dot > 0 {
 		return comma(s[:dot-1]) + s[dot:]
 	}
 
-	return comma(s)
+	return comma(s[:n-3]) + "," + s[n-3:]
+}
+
+func commafor(s string) string {
+	var buf bytes.Buffer
+	n := len(s) % 3
+	count := len(s) / 3
+
+	fmt.Fprintf(&buf, "%s", s[:n])
+	for i := 0; i < count; i++ {
+		if i == 0 && n == 0 {
+			fmt.Fprintf(&buf, "%s", s[n+i*3:n+(i+1)*3])
+			continue
+		}
+		fmt.Fprintf(&buf, ",%s", s[n+i*3:n+(i+1)*3])
+	}
+
+	return buf.String()
+}
+
+func intsToString(values []int) string {
+	var buf bytes.Buffer
+	buf.WriteByte('[')
+	for i, v := range values {
+		if i > 0 {
+			buf.WriteString(", ")
+		}
+		fmt.Fprintf(&buf, "%d", v)
+	}
+	buf.WriteByte(']')
+	return buf.String()
 }
