@@ -1,10 +1,15 @@
 package main
 
+import (
+	"fmt"
+)
+
 type tree struct {
 	value       int
 	left, right *tree
 }
 
+//Sort sorts values in place.
 func Sort(values []int) {
 	var root *tree
 	for _, v := range values {
@@ -37,5 +42,8 @@ func add(t *tree, value int) *tree {
 }
 
 func main() {
-
+	arr := []int{1, 2, 4, 5, 6, 2, 34, 67, 5}
+	fmt.Println(arr)
+	Sort(arr)
+	fmt.Println(arr)
 }
