@@ -33,7 +33,6 @@ func main() {
 			}
 		}
 	}
-
 }
 
 func craw1(url string) []string {
