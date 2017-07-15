@@ -29,6 +29,7 @@ func main() {
 
 	go print(conn)
 
+	fmt.Fprintln(conn, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n")
 	input := bufio.NewScanner(conn)
 	for input.Scan() {
 		log.Println(input.Text())
