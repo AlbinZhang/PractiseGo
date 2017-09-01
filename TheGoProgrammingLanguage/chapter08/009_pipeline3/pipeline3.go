@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// 单方向chan 只写
 func counter(out chan<- int) {
 	for x := 0; x < 100; x++ {
 		out <- x
@@ -9,6 +10,7 @@ func counter(out chan<- int) {
 	close(out)
 }
 
+// out: 只读， int：只写
 func squarer(out chan<- int, in <-chan int) {
 	for v := range in {
 		out <- v * v
@@ -16,6 +18,7 @@ func squarer(out chan<- int, in <-chan int) {
 	close(out)
 }
 
+// in 只读
 func printer(in <-chan int) {
 	for v := range in {
 		fmt.Println(v)

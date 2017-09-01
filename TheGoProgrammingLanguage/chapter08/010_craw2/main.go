@@ -9,27 +9,40 @@ import (
 	"golang.org/x/net/html"
 )
 
-var tokens = make(chan struct{}, 20)
+var count chan struct{}
 
 func main() {
 	worklist := make(chan []string)
-	var n int
-
-	n++
+	unseenLinks := make(chan string)
 
 	go func() { worklist <- os.Args[1:] }()
 
-	seen := make(map[string]bool)
+	go func() {
+		n := 0
+		for _ = range count {
+			n++
+			log.Println(n)
+		}
+	}()
 
-	for ; n > 0; n-- {
-		list := <-worklist
+	for i := 0; i < 2; i++ {
+		// 起了20个goroutine，
+		go func() {
+			for link := range unseenLinks {
+				foundLinks := craw1(link)
+				go func() {
+					worklist <- foundLinks
+				}()
+			}
+		}()
+	}
+
+	seen := make(map[string]bool)
+	for list := range worklist {
 		for _, link := range list {
 			if !seen[link] {
 				seen[link] = true
-				n++
-				go func(link string) {
-					worklist <- craw1(link)
-				}(link)
+				unseenLinks <- link
 			}
 		}
 	}
@@ -37,13 +50,12 @@ func main() {
 
 func craw1(url string) []string {
 	fmt.Println(url)
-
+	count <- struct{}{}
 	//	tokens <- struct{}{}
 
 	list, err := extract(url)
-
 	//<-tokens
-	if err != nil {
+	if err != nil || list == nil {
 		log.Print(err)
 	}
 	return list
