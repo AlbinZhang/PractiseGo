@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -10,8 +11,9 @@ func main() {
 
 	// Counter
 	go func() {
-		for x := 0; x < 100; x++ {
+		for x := 0; x <= 100; x++ {
 			naturals <- x
+			time.Sleep(100 * time.Millisecond)
 		}
 		close(naturals)
 	}()
