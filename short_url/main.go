@@ -10,15 +10,17 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
-	"net/http"
 
-	"./lib/mux"
+	"github.com/astaxie/beego"
 )
 
 var gPort = flag.String("port", "8080", "web listen port")
 
+func main() {
+	beego.Run(":" + *gPort)
+}
+
+/*
 func main() {
 	flag.Parse()
 
@@ -43,3 +45,4 @@ func (handler *BaseHandler) ServeHTTP(resp http.ResponseWriter, req *http.Reques
 
 	resp.Write([]byte("hello golang"))
 }
+*/
