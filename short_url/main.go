@@ -12,11 +12,16 @@ import (
 	"flag"
 
 	"github.com/astaxie/beego"
+
+	"./controllers"
 )
 
 var gPort = flag.String("port", "8080", "web listen port")
 
 func main() {
+
+	beego.RESTRouter("/api/url", &controllers.URLController{})
+	beego.Router("/*", &controllers.RedirectController{})
 	beego.Run(":" + *gPort)
 }
 
